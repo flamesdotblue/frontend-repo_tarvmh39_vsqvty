@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const timeline = [
   {
@@ -32,8 +33,16 @@ const skills = [
 ];
 
 export default function Story() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 80%', 'end 20%'] });
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const glowShift = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
   return (
-    <section id="story" className="relative w-full bg-[#0b0d12] px-6 py-24 text-white">
+    <section ref={ref} id="story" className="relative w-full bg-[#0b0d12] px-6 py-24 text-white">
+      {/* Parallax background accents */}
+      <motion.div style={{ y: bgY }} className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-32 max-w-7xl bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
       <div className="mx-auto max-w-7xl">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
@@ -68,7 +77,7 @@ export default function Story() {
             ))}
           </div>
 
-          {/* Skills hover-reveal */}
+          {/* Skills with subtle parallax glow */}
           <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-8 backdrop-blur">
             <motion.h3
               initial={{ opacity: 0, y: 10 }}
@@ -99,8 +108,8 @@ export default function Story() {
               ))}
             </div>
 
-            <div className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
+            <motion.div style={{ y: glowShift }} className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
+            <motion.div style={{ y: glowShift }} className="pointer-events-none absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
           </div>
         </div>
       </div>

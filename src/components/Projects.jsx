@@ -101,6 +101,7 @@ export default function Projects() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.6, delay: i * 0.05 }}
+              whileHover={{ y: -4, rotateX: 2, rotateY: -2, scale: 1.01, transformPerspective: 800 }}
               onClick={() => setActive(p)}
               className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left backdrop-blur outline-none`}
             >

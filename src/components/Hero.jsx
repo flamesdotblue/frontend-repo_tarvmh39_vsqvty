@@ -1,13 +1,23 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+
+  // Parallax for content and floating tags
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const tagY1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const tagY2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const tagY3 = useTransform(scrollYProgress, [0, 1], [0, -40]);
+
   return (
-    <section id="home" className="relative h-screen w-full overflow-hidden bg-[#0b0d12] text-white">
+    <section ref={ref} id="home" className="relative h-screen w-full overflow-hidden bg-[#0b0d12] text-white">
       {/* 3D Spline Scene */}
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/VJLoxp84lCdVfdZu/scene.splinecode"
+          scene="https://prod.spline.design/0UnIIJngGgvQNHiD/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
       </div>
@@ -18,7 +28,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-400/10 via-transparent to-fuchsia-500/10" />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-start justify-center px-6">
+      <motion.div style={{ y: contentY }} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-start justify-center px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,12 +77,12 @@ export default function Hero() {
             Get in Touch
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* Orbital callouts for uniqueness */}
-      <FloatingTag className="left-10 top-24" text="Framer Motion" hue="from-fuchsia-400 to-purple-500" />
-      <FloatingTag className="right-10 top-36" text="Spline 3D" hue="from-cyan-400 to-emerald-400" />
-      <FloatingTag className="left-14 bottom-24" text="Tailwind" hue="from-indigo-400 to-sky-500" />
+      {/* Orbital callouts for uniqueness with parallax */}
+      <FloatingTag style={{ y: tagY1 }} className="left-10 top-24" text="Framer Motion" hue="from-fuchsia-400 to-purple-500" />
+      <FloatingTag style={{ y: tagY2 }} className="right-10 top-36" text="Spline 3D" hue="from-cyan-400 to-emerald-400" />
+      <FloatingTag style={{ y: tagY3 }} className="left-14 bottom-24" text="Tailwind" hue="from-indigo-400 to-sky-500" />
 
       {/* Scroll cue */}
       <motion.div
@@ -95,12 +105,13 @@ export default function Hero() {
   );
 }
 
-function FloatingTag({ className = '', text, hue }) {
+function FloatingTag({ className = '', text, hue, style }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.6 }}
+      style={style}
       className={`pointer-events-none absolute ${className}`}
     >
       <div className="relative">
