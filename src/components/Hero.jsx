@@ -7,13 +7,14 @@ export default function Hero() {
       {/* 3D Spline Scene */}
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/igThmltzmqv5hkWo/scene.splinecode"
+          scene="https://prod.spline.design/cEecEwR6Ehj4iT8T/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
       </div>
 
       {/* Gradient overlay for depth without blocking interaction */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0b0d12]/30 via-[#0b0d12]/50 to-[#0b0d12]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0b0d12]/20 via-[#0b0d12]/50 to-[#0b0d12]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-rose-500/10 via-transparent to-orange-400/10" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-start justify-center px-6">
@@ -33,7 +34,7 @@ export default function Hero() {
           className="text-4xl font-extrabold leading-tight sm:text-6xl md:text-7xl"
         >
           I turn ideas into
-          <span className="bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-purple-500 bg-clip-text text-transparent"> interactive experiences</span>.
+          <span className="bg-gradient-to-r from-orange-400 via-rose-500 to-fuchsia-500 bg-clip-text text-transparent"> immersive interactions</span>.
         </motion.h1>
 
         <motion.p
@@ -54,7 +55,7 @@ export default function Hero() {
         >
           <a
             href="#projects"
-            className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#0b0d12] shadow-lg shadow-cyan-500/10 transition hover:scale-[1.02] hover:bg-gradient-to-r hover:from-cyan-400 hover:to-fuchsia-500 hover:text-white"
+            className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#0b0d12] shadow-lg shadow-orange-500/10 transition hover:scale-[1.02] hover:bg-gradient-to-r hover:from-orange-400 hover:to-rose-500 hover:text-white"
           >
             View Projects
           </a>
