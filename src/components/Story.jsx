@@ -1,116 +1,68 @@
 import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-
-const timeline = [
-  {
-    year: '2019',
-    title: 'First Lines of Code',
-    desc: 'Started exploring the web — built tiny experiments and UI clones.'
-  },
-  {
-    year: '2021',
-    title: 'Motion-First Mindset',
-    desc: 'Fell in love with micro-interactions, learned Framer Motion and 3D basics.'
-  },
-  {
-    year: '2023',
-    title: 'Freelance & Product',
-    desc: 'Shipped interactive experiences for brands and startup MVPs.'
-  },
-  {
-    year: 'Today',
-    title: 'Pushing the Craft',
-    desc: 'Designing smooth, cinematic web experiences with performance at heart.'
-  }
-];
-
-const skills = [
-  { name: 'React', hue: 'from-cyan-400 to-blue-500' },
-  { name: 'Framer Motion', hue: 'from-fuchsia-400 to-purple-500' },
-  { name: 'Three.js', hue: 'from-emerald-400 to-cyan-500' },
-  { name: 'Tailwind', hue: 'from-indigo-400 to-sky-500' },
-  { name: 'GSAP', hue: 'from-amber-400 to-rose-500' },
-];
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 
 export default function Story() {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 80%', 'end 20%'] });
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const glowShift = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const p = useSpring(scrollYProgress, { stiffness: 100, damping: 24 });
+
+  const bgY = useTransform(p, [0, 1], ['0%', '-25%']);
+  const glow = useTransform(p, [0, 0.5, 1], [0.2, 0.5, 0.2]);
 
   return (
-    <section ref={ref} id="story" className="relative w-full bg-[#0b0d12] px-6 py-24 text-white">
-      {/* Parallax background accents */}
-      <motion.div style={{ y: bgY }} className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-32 max-w-7xl bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <section id="story" ref={ref} className="relative w-full overflow-hidden bg-gradient-to-b from-black via-[#05070c] to-black py-28 text-white">
+      {/* Parallax background accent */}
+      <motion.div
+        style={{ y: bgY, opacity: glow }}
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60rem_40rem_at_20%_20%,rgba(59,130,246,0.18),transparent_60%),radial-gradient(50rem_30rem_at_80%_60%,rgba(34,211,238,0.12),transparent_60%)]"
+      />
 
-      <div className="mx-auto max-w-7xl">
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-          className="text-3xl font-bold md:text-5xl"
-        >
-          My Story
-        </motion.h2>
+      <div className="relative mx-auto max-w-5xl px-6">
+        <div className="max-w-2xl">
+          <motion.h2
+            className="text-3xl font-bold sm:text-4xl md:text-5xl"
+            initial={{ y: 24, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            A Narrative of Curiosity and Craft
+          </motion.h2>
+          <motion.p
+            className="mt-5 text-white/80"
+            initial={{ y: 18, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.08, type: 'spring', stiffness: 120, damping: 20 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            Design is more than visuals—it's choreography. Each interaction, transition, and micro-motion is part of a
+            larger story. This portfolio explores that narrative through tactile motion, parallax, and responsive 3D.
+          </motion.p>
+        </div>
 
-        <div className="mt-14 grid gap-10 md:grid-cols-2">
-          {/* Timeline */}
-          <div className="space-y-6">
-            {timeline.map((item, idx) => (
-              <motion.div
-                key={item.year}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.6, delay: idx * 0.05 }}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
-              >
-                <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-white/5 to-transparent" />
-                <div className="flex items-start justify-between">
-                  <span className="text-sm font-mono text-white/60">{item.year}</span>
-                  <span className="h-2 w-2 rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-500" />
-                </div>
-                <h3 className="mt-3 text-xl font-semibold">{item.title}</h3>
-                <p className="mt-2 text-white/70">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Skills with subtle parallax glow */}
-          <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-8 backdrop-blur">
-            <motion.h3
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-2xl font-semibold"
+        {/* Timeline */}
+        <div className="mt-16 grid gap-10 md:grid-cols-3">
+          {[
+            { title: 'Foundations', text: 'Built strong fundamentals in React, animation, and visual language.' },
+            { title: 'Exploration', text: 'Experimented with 3D canvases and scroll storytelling.' },
+            { title: 'Synthesis', text: 'Fused motion, 3D, and craft into immersive experiences.' }
+          ].map((item, i) => (
+            <motion.div
+              key={item.title}
+              className="relative rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+              initial={{ y: 20, opacity: 0, rotateX: -6 }}
+              whileInView={{ y: 0, opacity: 1, rotateX: 0 }}
+              transition={{ delay: i * 0.05, type: 'spring', stiffness: 140, damping: 18 }}
+              viewport={{ once: true, amount: 0.3 }}
+              style={{ perspective: 1000 }}
             >
-              Toolkit
-            </motion.h3>
-            <p className="mt-2 max-w-prose text-white/70">
-              Minimal, bold, and interactive. I use modern tools to craft smooth, performant experiences.
-            </p>
-
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
-              {skills.map((s, i) => (
-                <motion.div
-                  key={s.name}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06 }}
-                  className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 text-center text-sm font-medium backdrop-blur hover:shadow-[0_0_30px_rgba(255,255,255,0.06)]"
-                >
-                  <div className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-r ${s.hue}`} />
-                  <span className="relative z-10">{s.name}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div style={{ y: glowShift }} className="pointer-events-none absolute -right-32 -top-32 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
-            <motion.div style={{ y: glowShift }} className="pointer-events-none absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
-          </div>
+              <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-cyan-400/10 via-transparent to-blue-400/10" />
+              <div className="relative">
+                <h3 className="text-xl font-semibold">{item.title}</h3>
+                <p className="mt-3 text-white/75">{item.text}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

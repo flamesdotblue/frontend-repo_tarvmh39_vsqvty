@@ -1,125 +1,101 @@
-import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Github, Linkedin } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Mail, Send } from 'lucide-react';
 
 export default function Contact() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
   const [sent, setSent] = useState(false);
 
-  // generate confetti positions once
-  const confetti = useMemo(
-    () => Array.from({ length: 28 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 50,
-      s: Math.random() * 8 + 4,
-      h: Math.floor(Math.random() * 360),
-    })),
-    []
-  );
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 1800);
-  };
-
   return (
-    <section id="contact" className="relative w-full bg-[#0b0d12] px-6 pb-28 pt-24 text-white">
-      <div className="mx-auto max-w-4xl text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7 }}
-          className="text-3xl font-bold md:text-5xl"
-        >
-          Let’s Connect
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mx-auto mt-3 max-w-xl text-white/70"
-        >
-          Open to collaborations, freelance projects, or just geeking out about motion and UX.
-        </motion.p>
-
-        <form onSubmit={onSubmit} className="mx-auto mt-10 grid max-w-2xl gap-3 sm:grid-cols-2">
-          <input
-            required
-            type="text"
-            placeholder="Your name"
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 outline-none backdrop-blur focus:border-cyan-400/40 sm:col-span-1"
-          />
-          <input
-            required
-            type="email"
-            placeholder="Email"
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 outline-none backdrop-blur focus:border-cyan-400/40 sm:col-span-1"
-          />
-          <textarea
-            required
-            rows={4}
-            placeholder="Message"
-            className="sm:col-span-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/40 outline-none backdrop-blur focus:border-cyan-400/40"
-          />
-          <div className="sm:col-span-2">
-            <button
-              type="submit"
-              className="relative w-full overflow-hidden rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#0b0d12] shadow-lg shadow-cyan-500/10 transition hover:scale-[1.01] hover:bg-gradient-to-r hover:from-cyan-400 hover:to-fuchsia-500 hover:text-white"
-            >
-              Send Message
-            </button>
-          </div>
-        </form>
-
-        {/* Confetti micro-interaction */}
-        <div className="relative mx-auto mt-6 h-10 w-full max-w-2xl overflow-visible">
-          <AnimatePresence>
-            {sent && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="pointer-events-none absolute inset-0"
-              >
-                {confetti.map((c) => (
-                  <motion.span
-                    key={c.id}
-                    initial={{ y: 0, opacity: 1, rotate: 0 }}
-                    animate={{ y: 80 + c.y, opacity: 0, rotate: 180 }}
-                    transition={{ duration: 1.2, ease: 'easeOut' }}
-                    className="absolute block rounded"
-                    style={{
-                      left: `${c.x}%`,
-                      width: c.s,
-                      height: c.s,
-                      background: `hsl(${c.h} 90% 60%)`,
-                    }}
-                  />)
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-10 flex items-center justify-center gap-4">
-          <a href="mailto:hello@example.com" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/90 backdrop-blur transition hover:bg-white/10">
-            <Mail size={16} /> Email
-          </a>
-          <a target="_blank" rel="noreferrer" href="https://github.com/" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/90 backdrop-blur transition hover:bg-white/10">
-            <Github size={16} /> GitHub
-          </a>
-          <a target="_blank" rel="noreferrer" href="https://linkedin.com/" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/90 backdrop-blur transition hover:bg-white/10">
-            <Linkedin size={16} /> LinkedIn
-          </a>
-        </div>
+    <section id="contact" className="relative w-full bg-gradient-to-b from-black to-[#05070c] py-28 text-white">
+      {/* Decorative ring */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-400/10 [mask-image:radial-gradient(closest-side,black,transparent)]" />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-px max-w-7xl bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      <div className="pointer-events-none absolute -right-24 top-10 h-64 w-64 rounded-full bg-cyan-500/20 blur-3xl" />
-      <div className="pointer-events-none absolute -left-24 bottom-10 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
+      <div ref={ref} className="relative mx-auto max-w-4xl px-6">
+        <motion.h2
+          initial={{ y: 20, opacity: 0 }}
+          animate={inView ? { y: 0, opacity: 1 } : {}}
+          transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+          className="text-3xl font-bold sm:text-4xl md:text-5xl"
+        >
+          Let’s Build Something Together
+        </motion.h2>
+
+        <motion.p
+          initial={{ y: 16, opacity: 0 }}
+          animate={inView ? { y: 0, opacity: 1 } : {}}
+          transition={{ delay: 0.06, type: 'spring', stiffness: 140, damping: 18 }}
+          className="mt-4 max-w-2xl text-white/75"
+        >
+          Questions, ideas, or opportunities—drop a message and I’ll get back soon.
+        </motion.p>
+
+        <motion.form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setSent(true);
+          }}
+          initial={{ y: 24, opacity: 0 }}
+          animate={inView ? { y: 0, opacity: 1 } : {}}
+          transition={{ delay: 0.12, type: 'spring', stiffness: 160, damping: 20 }}
+          className="mt-10 grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+        >
+          <label className="grid gap-2">
+            <span className="text-sm text-white/80">Name</span>
+            <input
+              type="text"
+              required
+              className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+              placeholder="Jane Doe"
+            />
+          </label>
+          <label className="grid gap-2">
+            <span className="text-sm text-white/80">Email</span>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+              <input
+                type="email"
+                required
+                className="w-full rounded-md border border-white/10 bg-black/30 px-9 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+                placeholder="jane@domain.com"
+              />
+            </div>
+          </label>
+          <label className="grid gap-2">
+            <span className="text-sm text-white/80">Message</span>
+            <textarea
+              rows="5"
+              required
+              className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+              placeholder="Tell me about your idea..."
+            />
+          </label>
+
+          <div className="mt-2 flex items-center justify-between gap-4">
+            <motion.button
+              type="submit"
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 rounded-md bg-cyan-400/20 px-5 py-2.5 font-medium text-cyan-100 ring-1 ring-cyan-300/30 transition-colors hover:bg-cyan-400/30"
+            >
+              <Send className="h-4 w-4" /> Send message
+            </motion.button>
+
+            {sent && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-sm text-emerald-300"
+              >
+                Thanks! Your message was captured.
+              </motion.span>
+            )}
+          </div>
+        </motion.form>
+      </div>
     </section>
   );
 }
