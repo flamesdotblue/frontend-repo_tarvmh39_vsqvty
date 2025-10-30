@@ -1,9 +1,31 @@
+import { useEffect } from 'react';
 import Hero from './components/Hero';
 import Story from './components/Story';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 
 export default function App() {
+  useEffect(() => {
+    const header = document.querySelector('header');
+
+    const onClick = (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href');
+      if (id.length <= 1) return;
+      const el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      const headerOffset = header ? header.offsetHeight : 0;
+      const rect = el.getBoundingClientRect();
+      const offsetTop = window.pageYOffset + rect.top - headerOffset - 8; // a touch of spacing
+      window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    };
+
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
   return (
     <div className="min-h-screen w-full bg-[#0b0d12] antialiased">
       {/* Top nav */}
